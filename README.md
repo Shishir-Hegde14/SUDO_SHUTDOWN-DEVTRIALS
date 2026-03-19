@@ -182,3 +182,45 @@ Planned main navigation:
 - Payouts
 - Profile
 
+
+## Frontend Stack and Initial Build Approach
+
+For the frontend, we plan to build the mobile app using **React Native with Expo and TypeScript**. This gives us a strong base for building a mobile-first product quickly while still keeping the code structured and scalable. Expo is designed for building Android, iOS, and web apps from a single JavaScript/TypeScript project, which makes it a practical choice for a product that may later expand beyond a single-device demo. :contentReference[oaicite:0]{index=0}
+
+We intend to use **TypeScript** to keep the frontend code more organized and easier to scale as the app grows. Since the app includes multiple user flows such as onboarding, profile setup, quote generation, policy activation, claims, and payouts, having typed components, typed API responses, and structured navigation will help keep the frontend more maintainable over time. Expo’s current documentation supports TypeScript as a standard part of the development workflow. :contentReference[oaicite:1]{index=1}
+
+For navigation, we plan to structure the app around screen-based routing using **React Navigation** or **Expo Router**, depending on what fits the final code structure best. React Navigation is well-suited for managing transitions between screens, bottom tabs, stacks, and nested navigation flows, which matches the type of app flow we have already designed. Expo Router is also a strong option because it brings file-based routing to Expo and React Native projects, making it easier to organize larger screen structures cleanly. :contentReference[oaicite:2]{index=2}
+
+Our current frontend idea is to divide the app into clear stages:
+- authentication flow
+- onboarding flow
+- quote and plan selection
+- main dashboard flow
+- claims and payouts flow
+- profile and settings
+
+This structure will allow us to keep the user journey clear while also making the frontend easier to manage during development.
+
+For session handling, the app will remember the currently logged-in rider unless the account is changed or logged out. Sensitive session data such as tokens will be stored securely on-device using **Expo SecureStore**, which is designed for encrypted local key-value storage. React Native’s security guidance also recommends avoiding unencrypted local storage for sensitive credentials. :contentReference[oaicite:3]{index=3}
+
+For non-sensitive frontend state such as app preferences, lightweight cached state, or temporary UI persistence, we may use local persistent storage separately from secure auth storage. Expo documents Async Storage as a suitable unencrypted persistent key-value store for data that does not require encryption. :contentReference[oaicite:4]{index=4}
+
+At the frontend level, the app will mainly be responsible for:
+- collecting rider information
+- rendering quotes and policy details
+- displaying claims and payout states
+- managing user sessions
+- sending API requests to the backend
+- receiving and displaying backend-calculated pricing, claim status, and protection details
+
+This means the frontend remains focused on user experience and state management, while the heavy logic such as pricing, risk scoring, fraud checks, and policy decisions stays on the server side.
+
+In the initial build phase, the frontend will likely be organized into reusable components for:
+- forms
+- plan cards
+- claim status cards
+- payout summaries
+- dashboard widgets
+- navigation layouts
+
+This will help us move from wireframes to a scalable mobile app structure without tightly coupling UI code to backend logic.
