@@ -18,7 +18,7 @@ This creates a gap in protection for gig workers whose income is volatile, weekl
 
 ## Persona Selection
 
-1) What is our chosen persona?:
+1) What is our chosen persona?:  
 Our chosen persona is quick-commerce delivery riders working with platforms like Blinkit, Zepto, and Swiggy Instamart.
 
 2) Why did we choose this persona?:  
