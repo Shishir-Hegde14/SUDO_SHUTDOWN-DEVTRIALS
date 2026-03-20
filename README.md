@@ -391,3 +391,19 @@ The backend is responsible for:
 - processing payouts and maintaining transaction records
 
 All critical logic is handled on the backend, enabling a fully automated system where claims and payouts are triggered without manual intervention.
+
+## Development Plan
+
+### **Phase 1 (Weeks 1–2):** 
+Research, ideation, persona definition, README documentation — no prototype built yet
+
+### **Phase 2 (Weeks 3–4):**
+
+- **Frontend**: Authentication screens, rider onboarding, quote and plan selection, main dashboard, claims and payout screens
+- **Backend:** Authentication and API layer, user and profile service, insurance and risk engine, trigger engine, claims processing
+
+
+### **Phase 3 (Weeks 5–6):**
+
+- **Frontend:** Payout history screens, profile and settings, UI polish
+- **Backend:** Fraud detection layer, payments and payout service, background processing, admin dashboard, final demo video and pitch deck
