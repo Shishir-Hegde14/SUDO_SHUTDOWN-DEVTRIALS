@@ -204,3 +204,178 @@ The frontend is mainly responsible for:
 - rendering backend-calculated results
 
 Heavy logic such as pricing, risk scoring, fraud checks, and claim decisioning will remain on the server side.
+
+---
+
+## Backend System and Processing Flow
+
+The backend is designed as a **service-oriented system** that handles all core logic, automation, and integrations. It powers pricing, disruption detection, claim generation, and payouts, while the frontend focuses on user experience and interaction.
+
+The system communicates with the frontend through **secure REST APIs** and processes all business logic, validations, and external data integrations required for real-time income protection.
+
+### 1. Authentication and API Layer
+
+This is the entry point for all requests coming from the mobile app.
+
+**Responsibilities**
+- handle incoming API requests
+- validate request structure
+- authenticate users using JWT tokens
+- route requests to the correct services
+
+**Flow**
+- rider logs in using OTP
+- backend generates a JWT token
+- token is used for all future authenticated requests
+
+---
+
+### 2. User and Profile Service
+
+This service manages all rider-related data collected during onboarding.
+
+**Data stored**
+- personal details
+- work profile (platform, vehicle type)
+- delivery zones and location
+- working hours and availability
+
+**Purpose**
+- provide inputs for pricing and risk calculation
+- support claim eligibility checks
+- enable fraud validation
+
+---
+
+### 3. Insurance and Risk Engine
+
+This is the core logic layer responsible for pricing and policy management.
+
+**Responsibilities**
+- generate quotes
+- calculate weekly premiums
+- create and manage policies
+
+**Inputs**
+- rider profile and work patterns
+- location and delivery zone
+- external signals such as weather and AQI
+
+**Outputs**
+- risk score
+- premium amount
+- coverage value
+
+---
+
+### 4. Trigger Engine
+
+This component continuously monitors real-world conditions that affect rider earnings.
+
+**Monitors**
+- weather disruptions such as rain or flooding
+- AQI levels
+- platform or operational issues
+
+**Purpose**
+- detect when disruption thresholds are crossed
+- identify affected riders based on location and active policy
+- automatically initiate the claims process
+
+---
+
+### 5. Claims Processing
+
+Claims are generated automatically when a disruption affects a rider.
+
+**Process**
+- identify eligible riders
+- calculate income impact
+- create claims linked to active policies
+
+**Claim states**
+- created
+- under validation
+- approved or rejected
+- payout initiated
+- payout completed
+
+**Purpose**
+- remove the need for manual claim filing
+- ensure fast and consistent claim handling
+
+---
+
+### 6. Fraud Detection
+
+Before approval, each claim is validated through a fraud detection layer.
+
+**Checks**
+- GPS and location verification
+- duplicate claim detection
+- mismatch between declared and actual activity
+
+**Purpose**
+- ensure only legitimate claims are approved
+- maintain system reliability and trust
+
+---
+
+### 7. Payments and Payout Service
+
+Once a claim is approved, payouts are processed automatically.
+
+**Responsibilities**
+- initiate payouts through payment gateways
+- update transaction status
+- maintain payout history
+
+**Purpose**
+- ensure fast and reliable compensation for riders
+
+---
+
+### 8. Data and Storage Layer
+
+The backend uses a combination of databases and caching systems.
+
+**Storage**
+- PostgreSQL or MongoDB for primary data
+- Redis for caching, OTP storage, and session support
+
+**Data stored**
+- user profiles
+- policies
+- claims
+- transactions
+- trigger logs
+
+---
+
+### 9. Background Processing
+
+To support real-time automation, the system uses asynchronous processing.
+
+**Handles**
+- trigger monitoring
+- claim generation
+- payout execution
+
+**Purpose**
+- improve performance
+- reduce response latency
+- support scalability
+
+---
+
+### Backend Responsibility
+
+The backend is responsible for:
+- authentication and secure session management
+- storing and managing rider data
+- calculating pricing and risk scores
+- detecting external disruptions
+- automatically generating and validating claims
+- processing payouts and maintaining transaction records
+
+All critical logic is handled on the backend, enabling a fully automated system where claims and payouts are triggered without manual intervention.
