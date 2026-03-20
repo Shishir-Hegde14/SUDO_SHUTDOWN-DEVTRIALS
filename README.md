@@ -908,7 +908,7 @@ the hold even resolves.
 ## Development Plan
 
 ### **Phase 1 (Weeks 1–2):**
-Research, ideation, persona definition, README documentation — no prototype built yet
+Research, ideation, persona definition, README documentation , no prototype built yet
 
 ### **Phase 2 (Weeks 3–4):**
 - **Frontend:** Authentication screens, rider onboarding, quote and plan selection, main dashboard, claims and payout screens
