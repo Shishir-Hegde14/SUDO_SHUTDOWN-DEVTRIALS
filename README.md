@@ -19,7 +19,7 @@ LastMile is a mobile-first parametric insurance platform that protects quick-com
 7) [Weekly Premium Calculation Logic](#weekly-premium-calculation-logic)
 8) [Live Trigger Engine](#live-trigger-engine)
 9) [Fraud Detection and Claim Validation Engine](#fraud-detection-and-claim-validation-engine)
-10) [Adversarial Defense & Anti-Spoofing Strategy](#adversarial-defense--anti-spoofing-strategy)
+10) [Market Crash :Adversarial Defense & Anti-Spoofing Strategy](#adversarial-defense--anti-spoofing-strategy)
 11)  [Development Plan](#development-plan)
 12) [LastMile in Action](#lastmile-in-action)
 
