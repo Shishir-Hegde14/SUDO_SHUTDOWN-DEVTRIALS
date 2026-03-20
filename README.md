@@ -49,95 +49,93 @@ That makes it easier for us to build a product that is simple to explain, practi
 ## Proposed Solution
 ![rider flowchart](https://i.ibb.co/CKCbWhbG/1.png)
 
-## Frontend Flow and User Experience
+## Frontend and Mobile App Flow
 
-The frontend of our product is designed as a mobile-first experience for quick-commerce delivery riders. The app flow is structured around the rider journey from onboarding to policy activation, claims tracking, and payout visibility.
+The product is designed as a **mobile-first app** for quick-commerce delivery riders. The frontend focuses on a simple rider journey: onboarding, policy selection, coverage visibility, claims tracking, and payout status.
 
-### 1. Entry and Authentication
-This is the starting point of the app and handles first-time users as well as returning users.
+We plan to build the app using **React Native with Expo and TypeScript**. This gives us a clean cross-platform mobile setup while keeping the code structured and scalable. For navigation, we plan to use **React Navigation** or **Expo Router** depending on the final screen structure. Sensitive session data such as login tokens will be stored securely using **Expo SecureStore**.
 
-Screens included:
+### Core App Flow
+
+#### 1. Authentication
+The entry flow handles first-time and returning users.
+
+**Screens:**
 - Splash Screen
 - Welcome Screen
 - Login
 - OTP Verification
 
-Purpose:
-- introduce the app
-- authenticate the rider
+**Purpose:**
+- allow secure rider login
 - restore session for returning users
 
-### 2. Rider Onboarding
-After login, the rider is guided through personal and work-related setup.
+#### 2. Rider Onboarding
+After login, the rider is guided through onboarding and work setup.
 
-Screens included:
-- Personal Profile Setup
-- Work Profile Setup
+**Screens:**
+- Personal Details
+- Work Profile
 - Verification / Documents
 - Delivery Zone Selection
 
-Purpose:
-- capture the rider’s personal details
-- collect work-related information
-- map the rider to a platform and operating area
-- build the base for pricing and claim eligibility
-
-Important inputs collected:
-- name and phone number
+**Key data collected during onboarding:**
+- full name
+- phone number
 - city and state
-- platform (Blinkit / Zepto / Instamart)
+- platform used (Blinkit / Zepto / Instamart)
 - vehicle type
-- average work hours
-- weekly earnings
-- delivery zone / store mapping
+- average working hours
+- average weekly earnings
+- primary delivery zone
+- store / hub mapping
+- optional verification details
 
-### 3. Quote and Plan Selection
+This data helps the backend generate pricing, map the rider to an operating zone, and support claim eligibility checks.
+
+#### 3. Quote and Plan Selection
 Once onboarding is complete, the rider is shown available weekly protection plans.
 
-Screens included:
-- Quote Generation Screen
-- Plan Selection Screen
-- Policy Confirmation Screen
+**Screens:**
+- Quote Generation
+- Plan Selection
+- Policy Confirmation
 
-Purpose:
-- show weekly pricing
-- help the rider compare plans
-- allow activation of a suitable protection plan
+**Purpose:**
+- show weekly premium
+- allow plan comparison
+- activate a suitable protection plan
 
-This stage helps the rider understand:
+The rider will be able to view:
 - premium amount
-- covered events
 - coverage period
+- covered events
 - protection value
 
-### 4. Main Dashboard
-Once the policy is active, the rider enters the main app experience.
+#### 4. Main Dashboard
+After policy activation, the rider enters the main dashboard.
 
-Primary screens included:
+**Screens:**
 - Home Dashboard
 - Coverage Summary
 - Policy Details
-- Weekly Protection Status
 
-Purpose:
-- show whether the rider is currently covered
-- display active plan details
-- provide quick access to claims, payouts, and profile details
+**Purpose:**
+- show active coverage
+- display policy details
+- provide quick access to claims, payouts, and profile information
 
-### 5. Claims Flow
-The claims section is designed to give the rider visibility into the protection process.
+#### 5. Claims and Payouts
+This section gives visibility into the claim and payout process.
 
-Screens included:
+**Screens:**
 - Claims Overview
 - Claim Details
 - Claim Status Timeline
+- Wallet / Payouts
+- Payout History
 
-Purpose:
-- show claims linked to the rider’s policy
-- display status updates
-- explain the progress of claim processing
-
-Possible claim states:
+**Possible claim states:**
 - under review
 - validated
 - approved
@@ -145,82 +143,31 @@ Possible claim states:
 - payout initiated
 - payout completed
 
-### 6. Payout and Earnings View
-Once a claim is approved, the rider can view payout-related details inside the app.
+#### 6. Profile and Settings
+This section allows the rider to review and manage account details.
 
-Screens included:
-- Wallet / Payouts
-- Payout History
-- Protected Earnings Summary
-
-Purpose:
-- show payout amount
-- show payout history
-- display how much income has been protected over time
-
-### 7. Profile and Settings
-This section allows the rider to manage account and work-related details.
-
-Screens included:
+**Screens:**
 - Rider Profile
 - Work Profile Review
 - Settings
 - Logout / Account Switch
 
-Purpose:
-- update profile details
-- review work information
-- manage account access
-
 ### Main Navigation
-After onboarding, the rider enters a simple navigation structure built around the key parts of the product.
+After onboarding, the app will use a simple main navigation structure:
 
-Planned main navigation:
 - Home
 - Coverage
 - Claims
 - Payouts
 - Profile
 
-
-## Frontend Stack and Initial Build Approach
-
-For the frontend, we plan to build the mobile app using **React Native with Expo and TypeScript**. This gives us a strong base for building a mobile-first product quickly while still keeping the code structured and scalable. Expo is designed for building Android, iOS, and web apps from a single JavaScript/TypeScript project, which makes it a practical choice for a product that may later expand beyond a single-device demo.
-
-We intend to use **TypeScript** to keep the frontend code more organized and easier to scale as the app grows. Since the app includes multiple user flows such as onboarding, profile setup, quote generation, policy activation, claims, and payouts, having typed components, typed API responses, and structured navigation will help keep the frontend more maintainable over time. Expo’s current documentation supports TypeScript as a standard part of the development workflow. 
-
-For navigation, we plan to structure the app around screen-based routing using **React Navigation** or **Expo Router**, depending on what fits the final code structure best. React Navigation is well-suited for managing transitions between screens, bottom tabs, stacks, and nested navigation flows, which matches the type of app flow we have already designed. Expo Router is also a strong option because it brings file-based routing to Expo and React Native projects, making it easier to organize larger screen structures cleanly. :
-
-Our current frontend idea is to divide the app into clear stages:
-- authentication flow
-- onboarding flow
-- quote and plan selection
-- main dashboard flow
-- claims and payouts flow
-- profile and settings
-
-This structure will allow us to keep the user journey clear while also making the frontend easier to manage during development.
-
-For session handling, the app will remember the currently logged-in rider unless the account is changed or logged out. Sensitive session data such as tokens will be stored securely on-device using **Expo SecureStore**, which is designed for encrypted local key-value storage. React Native’s security guidance also recommends avoiding unencrypted local storage for sensitive credentials. 
-
-For non-sensitive frontend state such as app preferences, lightweight cached state, or temporary UI persistence, we may use local persistent storage separately from secure auth storage. Expo documents Async Storage as a suitable unencrypted persistent key-value store for data that does not require encryption. 
-
-At the frontend level, the app will mainly be responsible for:
+### Frontend Responsibility
+The frontend is mainly responsible for:
 - collecting rider information
-- rendering quotes and policy details
-- displaying claims and payout states
-- managing user sessions
-- sending API requests to the backend
-- receiving and displaying backend-calculated pricing, claim status, and protection details
+- managing the user journey
+- displaying quotes, policies, claims, and payouts
+- maintaining session state
+- sending user actions to the backend
+- rendering backend-calculated results
 
-This means the frontend remains focused on user experience and state management, while the heavy logic such as pricing, risk scoring, fraud checks, and policy decisions stays on the server side.
-
-In the initial build phase, the frontend will likely be organized into reusable components for:
-- forms
-- plan cards
-- claim status cards
-- payout summaries
-- dashboard widgets
-- navigation layouts
-
-This will help us move from wireframes to a scalable mobile app structure without tightly coupling UI code to backend logic.
+Heavy logic such as pricing, risk scoring, fraud checks, and claim decisioning will remain on the server side.
