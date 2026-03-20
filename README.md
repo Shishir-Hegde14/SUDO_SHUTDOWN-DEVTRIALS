@@ -800,6 +800,95 @@ In short, the fraud engine helps answer one core question:
 
 **Is this a genuine rider affected by a real disruption, or is this claim showing signs of manipulation or abuse?**
 
+## Adversarial Defense & Anti-Spoofing Strategy
+
+### The Threat
+A coordinated syndicate using GPS spoofing applications can fake their location inside a 
+disrupted zone while sitting at home, triggering false automatic payouts at scale. Basic GPS 
+coordinate verification cannot catch this because the coordinates themselves look legitimate. 
+This is precisely why LastMile's fraud engine is designed to go far beyond location alone.
+
+
+### 1. The Differentiation — Genuine Rider vs Bad Actor
+
+LastMile's fraud engine already analyzes location authenticity signals, work pattern signals, 
+and event overlap signals as described in the Fraud Detection section above. For spoofing 
+specifically, the system cross-references GPS coordinates against a set of device-level signals 
+that a spoofing app cannot fake simultaneously.
+
+A genuine rider caught in heavy rain will show:
+- Slow erratic movement consistent with navigating flooded lanes on a two-wheeler
+- Speed between 5–25 km/h with frequent stops
+- Mobile data signal with fluctuating strength — consistent with outdoor movement
+- Accelerometer and gyroscope data showing active motion and vibration
+- Work pattern consistent with their historical shift behavior
+
+A bad actor spoofing from home will show:
+- Static or unnaturally smooth GPS movement
+- Strong stable WiFi signal — inconsistent with being outdoors in a storm
+- Zero accelerometer movement — the phone is physically still
+- No gyroscope tilt or vibration
+- GPS coordinates that don't match their normal operating zone
+
+The system treats these device-level signals as a combined authenticity layer on top of the 
+GPS coordinate check. A rider needs to pass both to trigger a payout.
+
+
+### 2. The Data — Detecting a Coordinated Ring
+
+Beyond the individual fraud signals already described in the fraud engine section, 
+syndicate-level attacks produce network patterns that no legitimate disruption would generate:
+
+- **Claim surge rate per zone** — if a large number of riders in the same zone all trigger 
+claims within a narrow time window, this is flagged. Genuine disruptions affect riders 
+gradually as they enter affected areas, not all at once
+- **Cross-account network signals** — shared devices, shared UPI accounts, shared network 
+connections, and synchronized claim timing across multiple accounts are all tracked as 
+described in the Cross-Account and Network Signals section above
+- **Device fingerprinting** — multiple accounts on the same physical device are caught 
+through hardware ID tracking
+- **Velocity impossibility checks** — GPS coordinates showing movement faster than any 
+vehicle could physically achieve are flagged immediately using the Haversine formula
+- **Zone peer comparison** — a rider suddenly claiming in a zone they have never 
+historically operated in is anomalous and scored accordingly by the ML model
+
+These signals feed directly into the fraud risk score. A coordinated ring attack raises the 
+score across multiple accounts simultaneously, which itself becomes a detection signal at 
+the network level.
+
+
+### 3. The UX Balance — Protecting Honest Riders
+
+The biggest risk in any anti-spoofing system is penalizing a genuine rider whose phone 
+dropped GPS signal in bad weather — which is exactly when signal drops are most likely to 
+occur. LastMile handles this through a benefit-of-the-doubt hold rather than immediate 
+rejection.
+
+As described in the fraud score and flagging logic above, claims are routed based on risk 
+score:
+
+- **Low risk** — payout fires immediately, no delay
+- **Medium risk** — claim enters a short hold of maximum 2 hours. The rider receives a 
+notification: *"Your disruption claim is being verified. You will hear back within 2 hours."* 
+No action is required from them
+- **High risk** — claim is held and escalated for review
+
+During the hold window the system automatically checks whether the disruption remained 
+active, whether the rider's GPS signal recovered and resumed normal movement, and whether 
+all device-level signals resolve in the rider's favor. If they do, the payout fires automatically 
+without any rider intervention.
+
+What LastMile never does:
+- Never asks a genuine rider to manually prove their location during a disruption
+- Never permanently penalizes a rider for a single flagged claim
+- A rider requires 3 flagged claims within 30 days before any account-level action is taken
+- First-time flagged riders receive a transparent explanation of what the system looked for 
+— not a vague rejection
+
+This means a rider with a genuine GPS drop in bad weather experiences a short delay at 
+worst. A bad actor running a coordinated spoof gets caught at the device signal layer before 
+the hold even resolves.
+
 ## Development Plan
 
 ### **Phase 1 (Weeks 1–2):**
