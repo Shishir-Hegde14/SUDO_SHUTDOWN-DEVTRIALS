@@ -620,6 +620,252 @@ When one of these triggers crosses the defined threshold, the system checks whet
 If these checks are satisfied, the system creates a **potential claim event** and moves it to the next stage for validation and payout decisioning.
 
 This makes the trigger layer objective, explainable, and well-suited for a parametric insurance workflow.
+## Fraud Detection and Claim Validation Engine
+
+Our platform uses a separate **fraud detection and claim validation engine** to ensure that payouts are issued only for genuine disruption-linked income loss. This layer is independent from the pricing model and becomes active only after a valid claim candidate is created by the live trigger engine.
+
+The purpose of this engine is not only to detect obvious fraud, but also to identify suspicious patterns, coordinated abuse, manipulated rider behavior, and false claims that may appear valid on the surface.
+
+### Overall Design
+
+The fraud system is designed as a **multi-layer validation pipeline** with three major parts:
+
+1. **Rule-Based Checks**  
+   These are hard validation rules used to immediately catch obvious violations.
+
+2. **ML-Based Fraud Risk Scoring**  
+   A machine learning model analyzes rider activity and behavioral patterns to estimate how suspicious a claim is.
+
+3. **Decision Layer**  
+   Based on the rule checks and fraud score, the claim is either approved, softly flagged, or escalated for further review.
+
+This allows the platform to keep genuine payouts fast while still protecting itself against abuse.
+
+---
+
+### Types of Fraud the System is Designed to Detect
+
+The fraud engine is built to handle multiple classes of suspicious behavior.
+
+#### 1. Location Fraud
+This happens when a rider falsely appears to be in an affected zone.
+
+Examples:
+- GPS spoofing
+- fake presence in a high-risk area
+- claiming exposure to a disruption in a zone where the rider was not genuinely active
+- pretending to be near a shut dark store or high-payout cluster
+
+#### 2. Activity Fraud
+This happens when a rider was not actually working in a meaningful way but still attempts to claim income loss.
+
+Examples:
+- inactive rider trying to claim payout
+- no normal work pattern in the claimed time window
+- rider becoming active only around disruption time
+- rider with no recent activity claiming major earnings loss
+
+#### 3. Behavioral Fraud
+This happens when the rider’s claim pattern appears manipulative or unnatural.
+
+Examples:
+- repeated claims in suspicious weeks
+- sudden changes in normal operating zone before disruption
+- multiple claims shortly after signup
+- consistently claiming only during high-payout events
+- unusual policy purchase timing before risky weeks
+
+#### 4. Duplicate or Repeated Abuse
+This happens when the same rider or linked accounts repeatedly attempt similar claims.
+
+Examples:
+- multiple claims for the same event
+- repeated claims across related accounts
+- same payout account or device being used by multiple users
+- account recycling or duplicate identity behavior
+
+#### 5. Coordinated or Syndicate Fraud
+This is the most advanced form of fraud and becomes important in larger-scale abuse scenarios.
+
+Examples:
+- multiple riders appearing in the same risk zone at the same time
+- synchronized claims across many accounts
+- shared devices, payout accounts, or suspiciously similar movement patterns
+- cluster attacks during expected disruption windows
+
+---
+
+### What the Fraud Engine Looks At
+
+The fraud model does not depend on one single signal. Instead, it combines multiple groups of features to estimate how trustworthy a claim is.
+
+#### A. Account and Identity Signals
+These features help determine whether the rider account itself looks genuine.
+
+Examples:
+- account age
+- days since signup
+- KYC completion status
+- device reuse across accounts
+- payout account reuse across riders
+- unusually fast first claim after account creation
+
+#### B. Work Pattern Signals
+These features measure whether the rider behaves like a real active worker.
+
+Examples:
+- average active days per week
+- average working hours
+- average deliveries per day
+- consistency of work over past weeks
+- usual working slots
+- zone and store dependence
+- normal earnings pattern
+
+#### C. Location Authenticity Signals
+These features help identify fake or manipulated location behavior.
+
+Examples:
+- continuity of movement
+- realistic path and route patterns
+- impossible location jumps
+- mismatch between claimed zone and normal work zone
+- time spent in the affected zone
+- repeated exact presence in high-risk payout zones
+
+#### D. Event Overlap Signals
+These features measure whether the rider was genuinely exposed to the disruption.
+
+Examples:
+- active policy during event window
+- covered zone match
+- overlap between disruption time and rider’s normal work hours
+- recent activity in that zone
+- store / hub mapping consistency
+
+#### E. Claim History Signals
+These features help detect repeated suspicious usage patterns.
+
+Examples:
+- number of claims in recent weeks
+- payout frequency
+- flagged claim history
+- repeated claims in similar event types
+- repeated claims in the same zone
+- claim timing concentration
+
+#### F. Cross-Account and Network Signals
+These features help detect coordinated abuse.
+
+Examples:
+- shared bank or UPI accounts
+- shared devices
+- shared networks
+- synchronized claims
+- common location clusters
+- unusual similarity between multiple rider accounts
+
+#### G. Policy Misuse Signals
+These features help identify gaming of the product itself.
+
+Examples:
+- buying protection only in very risky weeks
+- repeated last-minute policy purchases
+- unusual plan upgrades before predicted disruption
+- selecting high-value protection only during high-risk events
+
+---
+
+### ML Model Design
+
+The fraud engine will use a **supervised machine learning classification model** trained on claim-level fraud features.
+
+Each row in the fraud dataset represents a **claim or potential claim event**, along with the rider’s behavioral, location, account, and event-related signals.
+
+The model’s purpose is to classify whether the claim is:
+- likely genuine
+- suspicious
+- high-risk fraudulent
+
+A suitable model for this is a **tabular classification model** such as:
+- XGBoost Classifier
+- LightGBM Classifier
+- CatBoost Classifier
+
+These models are well-suited for structured business data and can handle a large number of mixed features effectively.
+
+---
+
+### Fraud Score and Flagging Logic
+
+Instead of making a simple yes/no decision, the model produces a **fraud risk score**.
+
+This score is then used by the decision layer to determine the next step:
+
+- **Low risk** → claim can move forward quickly
+- **Medium risk** → claim is softly flagged for additional validation
+- **High risk** → claim is held or escalated for review
+
+This gives the system flexibility and reduces the chance of unfairly rejecting genuine riders.
+
+---
+
+### Rule-Based Checks
+
+Before the ML model runs, the system can apply hard rules to catch obvious violations.
+
+Examples:
+- no active policy
+- event outside insured zone
+- event outside policy time window
+- duplicate claim for the same event
+- impossible location movement
+- same payout account linked to multiple suspicious accounts
+
+These checks help remove clear invalid claims early and reduce unnecessary model noise.
+
+---
+
+### Training the Fraud Model
+
+In a real production setup, the model would be trained on historical labeled claims marked as:
+- genuine
+- suspicious
+- fraudulent
+
+For the current build, if real fraud data is limited, the model can be trained using a combination of:
+- simulated rider activity
+- synthetic fraud scenarios
+- generated suspicious claim behavior
+- rule-labeled examples
+
+This allows us to create realistic training data for:
+- fake zone presence
+- GPS spoofing patterns
+- duplicate claims
+- suspicious new accounts
+- repeated policy gaming
+- coordinated group attacks
+
+---
+
+### Why This Matters
+
+The fraud system is critical because the product is designed to automate parts of the claims process. Without a strong validation layer, the system would be vulnerable to false payouts, repeated abuse, and organized exploitation.
+
+By combining:
+- hard validation rules
+- rider behavior analysis
+- location authenticity checks
+- claim history analysis
+- cross-account similarity checks
+- machine learning-based fraud scoring
+
+the platform becomes more resilient, more trustworthy, and more scalable.
+
+In short, the fraud engine helps answer one core question:
+
+**Is this a genuine rider affected by a real disruption, or is this claim showing signs of manipulation or abuse?**
 
 ## Development Plan
 
