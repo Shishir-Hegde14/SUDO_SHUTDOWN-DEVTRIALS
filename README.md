@@ -51,35 +51,37 @@ That makes it easier for us to build a product that is simple to explain, practi
 
 ## Frontend and Mobile App Flow
 
-The product is designed as a **mobile-first app** for quick-commerce delivery riders. The frontend focuses on a simple rider journey: onboarding, policy selection, coverage visibility, claims tracking, and payout status.
+Our product is designed as a **mobile-first app** for quick-commerce delivery riders. The frontend is centered around a simple rider journey: onboarding, plan selection, coverage visibility, claims tracking, and payout status.
 
-We plan to build the app using **React Native with Expo and TypeScript**. This gives us a clean cross-platform mobile setup while keeping the code structured and scalable. For navigation, we plan to use **React Navigation** or **Expo Router** depending on the final screen structure. Sensitive session data such as login tokens will be stored securely using **Expo SecureStore**.
+For the frontend, we plan to use **React Native + Expo + TypeScript**. This gives us a strong cross-platform setup for mobile development while keeping the code organized and scalable. For navigation, we plan to use **React Navigation** or **Expo Router**, depending on the final screen structure. Sensitive session data such as login tokens will be stored securely using **Expo SecureStore**.
 
-### Core App Flow
+### 1. Authentication
 
-#### 1. Authentication
-The entry flow handles first-time and returning users.
+This is the entry point for both first-time and returning users.
 
-**Screens:**
+**Screens**
 - Splash Screen
 - Welcome Screen
 - Login
 - OTP Verification
 
-**Purpose:**
+**Purpose**
 - allow secure rider login
 - restore session for returning users
 
-#### 2. Rider Onboarding
-After login, the rider is guided through onboarding and work setup.
+---
 
-**Screens:**
+### 2. Rider Onboarding
+
+After login, the rider is guided through personal and work-related setup.
+
+**Screens**
 - Personal Details
 - Work Profile
 - Verification / Documents
 - Delivery Zone Selection
 
-**Key data collected during onboarding:**
+**Key data collected**
 - full name
 - phone number
 - city and state
@@ -91,51 +93,63 @@ After login, the rider is guided through onboarding and work setup.
 - store / hub mapping
 - optional verification details
 
-This data helps the backend generate pricing, map the rider to an operating zone, and support claim eligibility checks.
+**Purpose**
+- create the rider’s profile
+- map the rider to a platform and operating area
+- provide the backend with the data needed for pricing and claim eligibility
 
-#### 3. Quote and Plan Selection
+---
+
+### 3. Quote and Plan Selection
+
 Once onboarding is complete, the rider is shown available weekly protection plans.
 
-**Screens:**
+**Screens**
 - Quote Generation
 - Plan Selection
 - Policy Confirmation
 
-**Purpose:**
+**Purpose**
 - show weekly premium
-- allow plan comparison
+- allow comparison of available plans
 - activate a suitable protection plan
 
-The rider will be able to view:
+**Plan information shown**
 - premium amount
 - coverage period
 - covered events
 - protection value
 
-#### 4. Main Dashboard
-After policy activation, the rider enters the main dashboard.
+---
 
-**Screens:**
+### 4. Main Dashboard
+
+After policy activation, the rider enters the main app experience.
+
+**Screens**
 - Home Dashboard
 - Coverage Summary
 - Policy Details
 
-**Purpose:**
+**Purpose**
 - show active coverage
 - display policy details
 - provide quick access to claims, payouts, and profile information
 
-#### 5. Claims and Payouts
-This section gives visibility into the claim and payout process.
+---
 
-**Screens:**
+### 5. Claims and Payouts
+
+This section gives the rider visibility into the claim and payout process.
+
+**Screens**
 - Claims Overview
 - Claim Details
 - Claim Status Timeline
 - Wallet / Payouts
 - Payout History
 
-**Possible claim states:**
+**Possible claim states**
 - under review
 - validated
 - approved
@@ -143,17 +157,33 @@ This section gives visibility into the claim and payout process.
 - payout initiated
 - payout completed
 
-#### 6. Profile and Settings
+**Purpose**
+- show claim progress clearly
+- display payout outcomes
+- build transparency and trust in the system
+
+---
+
+### 6. Profile and Settings
+
 This section allows the rider to review and manage account details.
 
-**Screens:**
+**Screens**
 - Rider Profile
 - Work Profile Review
 - Settings
 - Logout / Account Switch
 
+**Purpose**
+- update profile details
+- review work-related information
+- manage account access safely
+
+---
+
 ### Main Navigation
-After onboarding, the app will use a simple main navigation structure:
+
+After onboarding, the app will use a simple navigation structure built around the most important parts of the rider journey:
 
 - Home
 - Coverage
@@ -161,7 +191,10 @@ After onboarding, the app will use a simple main navigation structure:
 - Payouts
 - Profile
 
+---
+
 ### Frontend Responsibility
+
 The frontend is mainly responsible for:
 - collecting rider information
 - managing the user journey
